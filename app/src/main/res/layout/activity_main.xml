@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:titlebar="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <com.mcgrady.xtitlebar.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        titlebar:title="Title"
+        titlebar:titleColor="@android:color/black"
+        titlebar:titleSize="14sp"
+        titlebar:leftText="返回"
+        titlebar:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
+        titlebar:leftTextColor="@android:color/black"
+        titlebar:leftTextSize="14sp"
+        titlebar:rightText="Search"
+        titlebar:rightTextColor="@android:color/black"
+        titlebar:rightTextSize="14sp"/>
+
+</LinearLayout>

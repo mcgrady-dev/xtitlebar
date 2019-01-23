@@ -39,22 +39,21 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
     }
 
     public TitleBar(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+        this(context, attrs, R.style.DefaultTitleBarAttr);
     }
 
     public TitleBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initViews(context, attrs);
+        initViews(context, attrs, defStyleAttr);
     }
 
-
     @SuppressLint("ObsoleteSdkInt")
-    private void initViews(Context context, AttributeSet attrs) {
+    private void initViews(Context context, AttributeSet attrs, int defStyleAttr) {
         padding_12 = dp2PxInt(context, 12);
         ViewGroup.LayoutParams globalParams = new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         setLayoutParams(globalParams);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TitleBar);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TitleBar, defStyleAttr, 0);
 
         /**
          * Lfet View

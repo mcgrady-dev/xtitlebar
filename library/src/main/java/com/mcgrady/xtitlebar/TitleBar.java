@@ -207,8 +207,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener {
 
         if (rightCustomView != null) {
             contentLayout.addView(rightCustomView);
-        } else if (tvLfetView != null) {
-            contentLayout.addView(tvLfetView);
+        } else if (tvRightView != null) {
+            contentLayout.addView(tvRightView);
         }
 
         addView(contentLayout, 0);

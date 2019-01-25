@@ -2,20 +2,22 @@ package com.mcgrady.xtitlebar;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
- * <p>类说明</p>
+ * <p>构建TextView</p>
  *
  * @author: mcgrady
  * @date: 2019/1/25
  */
 
-public class TestTextView {
+public class TextViewDirector {
 
     private Context context;
     private int id;
+    private CharSequence text;
     private int gravity;
     private boolean singleLine;
     private TextUtils.TruncateAt ellipsize;
@@ -23,7 +25,10 @@ public class TestTextView {
     private float size;
     private LinearLayout.LayoutParams layoutParams;
 
-    private TestTextView(Builder builder) {
+    private TextViewDirector() {
+    }
+
+    public TextViewDirector(Builder builder) {
         context = builder.context;
         id = builder.id;
         gravity = builder.gravity;
@@ -32,9 +37,31 @@ public class TestTextView {
         color = builder.color;
         size = builder.size;
         layoutParams = builder.layoutParams;
+        text = builder.text;
     }
 
+    public TextView construct() {
+        if (context == null) {
+            return null;
+        }
 
+        TextView textView;
+        textView = new TextView(context);
+        textView.setId(id);
+        textView.setLayoutParams(layoutParams);
+        textView.setGravity(gravity);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        textView.setTextColor(color);
+        textView.setSingleLine(singleLine);
+        textView.setEllipsize(ellipsize);
+        textView.setText(text);
+
+        return textView;
+    }
+
+    /**
+     * TextView建造者
+     */
     public static final class Builder {
         private Context context;
         private int id;
@@ -44,52 +71,60 @@ public class TestTextView {
         private int color;
         private float size;
         private LinearLayout.LayoutParams layoutParams;
+        private CharSequence text;
 
         public Builder() {
         }
 
-        public Builder context(Context val) {
+        public Builder with(Context val) {
             context = val;
             return this;
         }
 
-        public Builder id(int val) {
+        public Builder setId(int val) {
             id = val;
             return this;
         }
 
-        public Builder gravity(int val) {
+        public Builder setGravity(int val) {
             gravity = val;
             return this;
         }
 
-        public Builder singleLine(boolean val) {
+        public Builder setSingleLine(boolean val) {
             singleLine = val;
             return this;
         }
 
-        public Builder ellipsize(TextUtils.TruncateAt val) {
+        public Builder setEllipsize(TextUtils.TruncateAt val) {
             ellipsize = val;
             return this;
         }
 
-        public Builder color(int val) {
+        public Builder setTextColor(int val) {
             color = val;
             return this;
         }
 
-        public Builder size(float val) {
+        public Builder setTextSize(float val) {
             size = val;
             return this;
         }
 
-        public Builder layoutParams(LinearLayout.LayoutParams val) {
+        public Builder setLayoutParams(LinearLayout.LayoutParams val) {
             layoutParams = val;
             return this;
         }
 
-        public TextView build() {
-            return new TextView(context);
+        public Builder setText(CharSequence val) {
+            text = val;
+            return this;
+        }
+
+        public TextViewDirector create() {
+            return new TextViewDirector(this);
         }
     }
+
+
 }

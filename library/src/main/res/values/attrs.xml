@@ -5,6 +5,8 @@
         <!-- 标题栏背景 图片或颜色 -->
         <attr name="titleBarColor" format="color" />
 
+        <attr name="titleBarDrawableRes" format="reference" />
+
         <!-- 填充状态栏 -->
         <attr name="fillStatusBar" format="boolean" />
 

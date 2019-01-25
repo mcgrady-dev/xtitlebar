@@ -4,13 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mcgrady.xtitlebar.utils.DrawableUtils;
@@ -27,40 +28,52 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * @date: 2019/1/22
  */
 
-public class TitleBar extends RelativeLayout implements View.OnClickListener {
+public class TitleBar extends FrameLayout implements View.OnClickListener {
 
     private TextView tvLfetView, tvTitleView, tvRightView;
-    private View leftCustomView, titleCustomView, rightCustomView;
+    private View leftCustomView, titleCustomView, rightCustomView, lineView;
 
-    int padding_12;
+    private int padding_10;
+    private int titleBarHeight;
 
     public TitleBar(Context context) {
         this(context, null);
     }
 
     public TitleBar(Context context, AttributeSet attrs) {
-        this(context, attrs, R.style.DefaultTitleBarAttr);
+        this(context, attrs, 0);
     }
 
     public TitleBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initViews(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr, R.style.DefaultTitleBarRes);
     }
 
+    public TitleBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        initViews(context, attrs, defStyleAttr, defStyleRes);
+        formattionViews(context);
+    }
+
+    /**
+     * 初始化Views
+     * @param context
+     * @param attrs
+     * @param defStyleAttr
+     * @param defStyleRes
+     */
     @SuppressLint("ObsoleteSdkInt")
-    private void initViews(Context context, AttributeSet attrs, int defStyleAttr) {
-        padding_12 = dp2PxInt(context, 12);
-        ViewGroup.LayoutParams globalParams = new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        setLayoutParams(globalParams);
+    private void initViews(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        padding_10 = dp2px(context, 10);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TitleBar, defStyleAttr, 0);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TitleBar, defStyleAttr, defStyleRes);
 
-        /**
-         * Lfet View
-         */
-        LayoutParams leftLayoutParams = new LayoutParams(WRAP_CONTENT, MATCH_PARENT);
-        leftLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        leftLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        titleBarHeight = (int) array.getDimension(R.styleable.TitleBar_titleBarHeight, 0);
+
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Lfet View
+        ///////////////////////////////////////////////////////////////////////////
+        LinearLayout.LayoutParams leftLayoutParams = new LinearLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT);
 
         if (array.hasValue(R.styleable.TitleBar_layout_left_custom)) {
             leftCustomView = LayoutInflater.from(context).inflate(
@@ -69,52 +82,55 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             if (View.NO_ID == leftCustomView.getId()) {
                 leftCustomView.setId(generateViewId());
             }
-
-            addView(leftCustomView, leftLayoutParams);
         } else {
-            tvLfetView = new TextView(context);
-            tvLfetView.setId(generateViewId());
-            tvLfetView.setText(array.getString(R.styleable.TitleBar_leftText));
-            tvLfetView.setTextColor(array.getColor(R.styleable.TitleBar_leftTextColor, 0));
-            tvLfetView.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimensionPixelSize(R.styleable.TitleBar_leftTextSize, 0));
-            tvLfetView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-            tvLfetView.setSingleLine(true);
+            tvLfetView = new TextViewDirector.Builder()
+                    .with(context)
+                    .setId(generateViewId())
+                    .setLayoutParams(leftLayoutParams)
+                    .setGravity(Gravity.CENTER)
+                    .setTextColor(array.getColor(R.styleable.TitleBar_leftTextColor, 0))
+                    .setTextSize(array.getDimensionPixelSize(R.styleable.TitleBar_leftTextSize, 0))
+                    .setSingleLine(true)
+                    .setEllipsize(TextUtils.TruncateAt.END)
+                    .setText(array.getString(R.styleable.TitleBar_leftText))
+                    .create()
+                    .construct();
+
             if (array.hasValue(R.styleable.TitleBar_leftDrawableRes)) {
                 DrawableUtils.setDrawableLeft(context, tvLfetView, array.getResourceId(R.styleable.TitleBar_leftDrawableRes, 0));
             }
-            addView(tvLfetView, leftLayoutParams);
         }
 
-        /**
-         * Title View
-         */
-        LayoutParams titleLayoutParams = new LayoutParams(WRAP_CONTENT, MATCH_PARENT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            titleLayoutParams.setMarginStart(padding_12);
-            titleLayoutParams.setMarginEnd(padding_12);
-        } else {
-            titleLayoutParams.setMargins(padding_12, 0, padding_12, 0);
-        }
-        titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Title View
+        ///////////////////////////////////////////////////////////////////////////
+        LinearLayout.LayoutParams titleLayoutParams = new LinearLayout.LayoutParams(0, MATCH_PARENT);
+        titleLayoutParams.weight = 1;
+        titleLayoutParams.leftMargin = padding_10;
+        titleLayoutParams.rightMargin = padding_10;
         if (array.hasValue(R.styleable.TitleBar_layout_title_custom)) {
-
+            //todo: draw custom view
         } else {
-            tvTitleView = new TextView(context);
-            tvTitleView.setId(generateViewId());
-            tvTitleView.setText(array.getString(R.styleable.TitleBar_title));
-            tvTitleView.setTextColor(array.getColor(R.styleable.TitleBar_titleColor, 0));
-            tvTitleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimensionPixelSize(R.styleable.TitleBar_titleSize, 0));
-            tvTitleView.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-            tvTitleView.setSingleLine(true);
-            addView(tvTitleView, titleLayoutParams);
+            tvTitleView = new TextViewDirector.Builder()
+                    .with(context)
+                    .setId(generateViewId())
+                    .setLayoutParams(titleLayoutParams)
+                    .setGravity(Gravity.CENTER)
+                    .setTextColor(array.getColor(R.styleable.TitleBar_titleColor, 0))
+                    .setTextSize(array.getDimensionPixelSize(R.styleable.TitleBar_titleSize, 0))
+                    .setSingleLine(true)
+                    .setEllipsize(TextUtils.TruncateAt.END)
+                    .setText(array.getString(R.styleable.TitleBar_title))
+                    .create()
+                    .construct();
         }
 
-        /**
-         * Right View
-         */
-        LayoutParams rightLayoutParams = new LayoutParams(WRAP_CONTENT, MATCH_PARENT);
-        rightLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-        rightLayoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Right View
+        ///////////////////////////////////////////////////////////////////////////
+        LinearLayout.LayoutParams rightLayoutParams = new LinearLayout.LayoutParams(WRAP_CONTENT, MATCH_PARENT);
         if (array.hasValue(R.styleable.TitleBar_layout_right_custom)) {
             rightCustomView = LayoutInflater.from(context).inflate(
                     array.getResourceId(R.styleable.TitleBar_layout_right_custom, 0), this, false);
@@ -122,7 +138,6 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             if (View.NO_ID == rightCustomView.getId()) {
                 rightCustomView.setId(generateViewId());
             }
-            addView(rightCustomView, leftLayoutParams);
         } else {
             tvRightView = new TextView(context);
             tvRightView.setId(generateViewId());
@@ -131,15 +146,73 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             if (array.hasValue(R.styleable.TitleBar_rightDrawableRes)) {
                 DrawableUtils.setDrawableLeft(context, tvRightView, array.getResourceId(R.styleable.TitleBar_rightDrawableRes, 0));
             } else {
-                tvRightView.setText(array.getString(R.styleable.TitleBar_rightText));
-                tvRightView.setTextColor(array.getColor(R.styleable.TitleBar_rightTextColor, 0));
-                tvRightView.setTextSize(TypedValue.COMPLEX_UNIT_PX, array.getDimensionPixelSize(R.styleable.TitleBar_rightTextSize, 0));
+                tvRightView = new TextViewDirector.Builder()
+                        .with(context)
+                        .setId(generateViewId())
+                        .setLayoutParams(rightLayoutParams)
+                        .setGravity(Gravity.CENTER)
+                        .setTextColor(array.getColor(R.styleable.TitleBar_rightTextColor, 0))
+                        .setTextSize(array.getDimensionPixelSize(R.styleable.TitleBar_rightTextSize, 0))
+                        .setSingleLine(true)
+                        .setEllipsize(TextUtils.TruncateAt.END)
+                        .setText(array.getString(R.styleable.TitleBar_rightText))
+                        .create()
+                        .construct();
             }
+        }
 
-            addView(tvRightView, rightLayoutParams);
+        ///////////////////////////////////////////////////////////////////////////
+        // Line View
+        ///////////////////////////////////////////////////////////////////////////
+        lineView = new View(context);
+        lineView.setId(generateViewId());
+        LayoutParams lineLayoutParams = new LayoutParams(MATCH_PARENT, 1);
+        lineLayoutParams.gravity = Gravity.BOTTOM;
+        lineView.setLayoutParams(lineLayoutParams);
+
+
+        ///////////////////////////////////////////////////////////////////////////
+        // Background
+        ///////////////////////////////////////////////////////////////////////////
+        if (array.hasValue(R.styleable.TitleBar_titleBarDrawableRes)) {
+            setBackgroundResource(array.getResourceId(R.styleable.TitleBar_titleBarDrawableRes, 0));
+        } else {
+            setBackgroundColor(array.getColor(R.styleable.TitleBar_titleBarColor, 0));
         }
 
         array.recycle();
+    }
+
+    /**
+     * 组建Views
+     * @param context
+     */
+    private void formattionViews(Context context) {
+        LinearLayout contentLayout = new LinearLayout(context);
+        contentLayout.setId(generateViewId());
+        contentLayout.setOrientation(LinearLayout.HORIZONTAL);
+        contentLayout.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+
+        if (leftCustomView != null) {
+            contentLayout.addView(leftCustomView);
+        } else if (tvLfetView != null) {
+            contentLayout.addView(tvLfetView);
+        }
+
+        if (titleCustomView != null) {
+            contentLayout.addView(titleCustomView);
+        } else if (tvTitleView != null) {
+            contentLayout.addView(tvTitleView);
+        }
+
+        if (rightCustomView != null) {
+            contentLayout.addView(rightCustomView);
+        } else if (tvLfetView != null) {
+            contentLayout.addView(tvLfetView);
+        }
+
+        addView(contentLayout, 0);
+        addView(lineView, 1);
     }
 
     @Override
@@ -163,19 +236,43 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
 
     }
 
-    private int dp2PxInt(Context context, float dp) {
-        return (int) (dp2Px(context, dp) + 0.5f);
-    }
-
-    private float dp2Px(Context context, float dp) {
-        if (context == null) {
-            return -1;
+    @SuppressLint({"ObsoleteSdkInt", "DrawAllocation"})
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        // 设置TitleBar默认的宽度
+        if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST
+                || MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(widthMeasureSpec, MeasureSpec.EXACTLY);
         }
-        return dp * density(context);
+
+        // 设置TitleBar默认的高度
+        if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST
+                || MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.UNSPECIFIED) {
+
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(titleBarHeight, MeasureSpec.EXACTLY);
+
+//            final Drawable background = getBackground();
+//            // 如果当前背景是一张图片的话
+//            if (background instanceof BitmapDrawable) {
+//                mMainLayout.getLayoutParams().height = MeasureSpec.getSize(heightMeasureSpec);
+//                // 算出标题栏的宽度和图片的宽度之比例
+//                final double ratio = (double) MeasureSpec.getSize(widthMeasureSpec) / (double) background.getIntrinsicWidth();
+//                heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (ratio * background.getIntrinsicHeight()), MeasureSpec.EXACTLY);
+//            }
+        }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
     }
 
-    private float density(Context context) {
-        return context.getResources().getDisplayMetrics().density;
+    /**
+     * 设置标题
+     * @param text
+     */
+    public void setTitle(CharSequence text) {
+        if (tvTitleView != null) {
+            tvTitleView.setText(text);
+        }
     }
 
     /**
@@ -190,5 +287,21 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         } else {
             return UUID.randomUUID().hashCode();
         }
+    }
+
+    /**
+     * dp转px
+     */
+    static int dp2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
+    /**
+     * sp转px
+     */
+    static int sp2px(Context context, float spValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
     }
 }

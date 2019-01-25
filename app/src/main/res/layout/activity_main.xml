@@ -9,10 +9,9 @@
 
     <com.mcgrady.xtitlebar.TitleBar
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        style="@style/CustomTitleBarAttr"
+        android:layout_height="wrap_content"
         titlebar:title="Title"
-        titlebar:leftText="返回"
-        titlebar:rightText="Search"/>
+        titlebar:rightText="Search"
+        titlebar:titleBarDrawableRes="@drawable/shape_gradient"/>
 
 </LinearLayout>

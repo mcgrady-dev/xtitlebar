@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mcgrady.xtitlebar.interf.OnTitleBarListener;
 import com.mcgrady.xtitlebar.utils.DrawableUtils;
 
 import java.util.UUID;
@@ -35,6 +36,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
     private TextView tvLfetView, tvTitleView, tvRightView;
     private View leftCustomView, titleCustomView, rightCustomView, lineView;
     private LinearLayout contentLayout;
+    private OnTitleBarListener listener;
 
     private int padding_10;
     private int titleBarHeight;
@@ -96,6 +98,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
                     .setSingleLine(true)
                     .setEllipsize(TextUtils.TruncateAt.END)
                     .setText(array.getString(R.styleable.TitleBar_leftText))
+                    .setOnClickListener(this)
                     .create()
                     .construct();
 
@@ -125,6 +128,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
                     .setSingleLine(true)
                     .setEllipsize(TextUtils.TruncateAt.END)
                     .setText(array.getString(R.styleable.TitleBar_title))
+                    .setOnClickListener(this)
                     .create()
                     .construct();
         }
@@ -159,6 +163,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
                         .setSingleLine(true)
                         .setEllipsize(TextUtils.TruncateAt.END)
                         .setText(array.getString(R.styleable.TitleBar_rightText))
+                        .setOnClickListener(this)
                         .create()
                         .construct();
             }
@@ -239,7 +244,17 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
 
     @Override
     public void onClick(View view) {
+        if (listener == null) {
+            return;
+        }
 
+        if (view.equals(tvLfetView)) {
+            listener.onClick(view, TitleBarViewClickAction.ACTION_LEFT_VIEW);
+        } else if (view.equals(tvRightView)) {
+            listener.onClick(view, TitleBarViewClickAction.ACTION_RIGHT_VIEW);
+        } else if (view.equals(tvTitleView)) {
+            listener.onClick(view, TitleBarViewClickAction.ACTION_TITLE_VIEW);
+        }
     }
 
     @SuppressLint({"ObsoleteSdkInt", "DrawAllocation"})

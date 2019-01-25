@@ -3,6 +3,7 @@ package com.mcgrady.xtitlebar;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class TextViewDirector {
     private int color;
     private float size;
     private LinearLayout.LayoutParams layoutParams;
+    private View.OnClickListener listener;
 
     private TextViewDirector() {
     }
@@ -38,6 +40,7 @@ public class TextViewDirector {
         size = builder.size;
         layoutParams = builder.layoutParams;
         text = builder.text;
+        listener = builder.listener;
     }
 
     public TextView construct() {
@@ -72,6 +75,7 @@ public class TextViewDirector {
         private float size;
         private LinearLayout.LayoutParams layoutParams;
         private CharSequence text;
+        private View.OnClickListener listener;
 
         public Builder() {
         }
@@ -118,6 +122,11 @@ public class TextViewDirector {
 
         public Builder setText(CharSequence val) {
             text = val;
+            return this;
+        }
+
+        public Builder setOnClickListener(View.OnClickListener val) {
+            listener = val;
             return this;
         }
 

@@ -1,4 +1,4 @@
-package com.mcgrady.xtitlebar;
+package com.mcgrady.xtitlebar.interf;
 
 import android.support.annotation.ColorInt;
 import android.support.annotation.Px;

@@ -3,6 +3,8 @@ package com.mcgrady.xtitlebar;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -28,10 +30,11 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * @date: 2019/1/22
  */
 
-public class TitleBar extends FrameLayout implements View.OnClickListener {
+public class TitleBar extends FrameLayout implements View.OnClickListener, Runnable {
 
     private TextView tvLfetView, tvTitleView, tvRightView;
     private View leftCustomView, titleCustomView, rightCustomView, lineView;
+    private LinearLayout contentLayout;
 
     private int padding_10;
     private int titleBarHeight;
@@ -188,7 +191,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener {
      * @param context
      */
     private void formattionViews(Context context) {
-        LinearLayout contentLayout = new LinearLayout(context);
+        contentLayout = new LinearLayout(context);
         contentLayout.setId(generateViewId());
         contentLayout.setOrientation(LinearLayout.HORIZONTAL);
         contentLayout.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -213,6 +216,9 @@ public class TitleBar extends FrameLayout implements View.OnClickListener {
 
         addView(contentLayout, 0);
         addView(lineView, 1);
+
+        // 初始化边距
+        post(this);
     }
 
     @Override
@@ -251,18 +257,40 @@ public class TitleBar extends FrameLayout implements View.OnClickListener {
 
             heightMeasureSpec = MeasureSpec.makeMeasureSpec(titleBarHeight, MeasureSpec.EXACTLY);
 
-//            final Drawable background = getBackground();
-//            // 如果当前背景是一张图片的话
-//            if (background instanceof BitmapDrawable) {
-//                mMainLayout.getLayoutParams().height = MeasureSpec.getSize(heightMeasureSpec);
-//                // 算出标题栏的宽度和图片的宽度之比例
-//                final double ratio = (double) MeasureSpec.getSize(widthMeasureSpec) / (double) background.getIntrinsicWidth();
-//                heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (ratio * background.getIntrinsicHeight()), MeasureSpec.EXACTLY);
-//            }
+            final Drawable background = getBackground();
+            // 如果当前背景是一张图片的话
+            if (background instanceof BitmapDrawable) {
+                contentLayout.getLayoutParams().height = MeasureSpec.getSize(heightMeasureSpec);
+                // 算出标题栏的宽度和图片的宽度之比例
+                final double ratio = (double) MeasureSpec.getSize(widthMeasureSpec) / (double) background.getIntrinsicWidth();
+                heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (ratio * background.getIntrinsicHeight()), MeasureSpec.EXACTLY);
+            }
         }
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
+    }
+
+    @Override
+    public void run() {
+        // 更新中间标题的内边距，避免向左或者向右偏移
+        int leftViewWidth = leftCustomView == null ? tvLfetView == null ? 0 : tvLfetView.getWidth() : leftCustomView.getWidth();
+        int rightViewWidth = rightCustomView == null ? tvRightView == null ? 0 : tvRightView.getWidth() : rightCustomView.getWidth();
+        if (leftViewWidth != rightViewWidth) {
+            if (leftViewWidth > rightViewWidth) {
+                if (titleCustomView != null) {
+                    titleCustomView.setPadding(0, 0, leftViewWidth - rightViewWidth, 0);
+                } else if (tvTitleView != null) {
+                    tvTitleView.setPadding(0, 0, leftViewWidth - rightViewWidth, 0);
+                }
+            } else {
+                if (titleCustomView != null) {
+                    titleCustomView.setPadding(rightViewWidth - leftViewWidth, 0, 0, 0);
+                } else if (tvTitleView != null) {
+                    tvTitleView.setPadding(rightViewWidth - leftViewWidth, 0, 0, 0);
+                }
+            }
+        }
     }
 
     /**
@@ -272,6 +300,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener {
     public void setTitle(CharSequence text) {
         if (tvTitleView != null) {
             tvTitleView.setText(text);
+            post(this);
         }
     }
 

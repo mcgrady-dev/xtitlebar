@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -240,6 +241,23 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
         tvTitleView.setOnClickListener(null);
         tvRightView.setOnClickListener(null);
         super.onDetachedFromWindow();
+    }
+
+    /**
+     * 注意：不支持自定义view点击事件
+     * @param listener
+     */
+    public void setTitleBarListener(OnTitleBarListener listener) {
+        this.listener = listener;
+    }
+
+    /**
+     * 屏蔽点击事件
+     * @param l
+     */
+    @Override
+    public void setOnClickListener(@Nullable View.OnClickListener l) {
+        return;
     }
 
     @Override

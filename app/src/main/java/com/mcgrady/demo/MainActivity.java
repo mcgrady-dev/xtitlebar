@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.mcgrady.xtitlebar.TitleBar;
+import com.mcgrady.xtitlebar.TitleBarViewClickAction;
+import com.mcgrady.xtitlebar.interf.OnTitleBarListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +22,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 titleBar.setTitle("标题标题");
+            }
+        });
+
+        titleBar.setTitleBarListener(new OnTitleBarListener() {
+            @Override
+            public void onClick(View view, TitleBarViewClickAction action) {
+                switch (action) {
+                    case ACTION_LEFT_VIEW:
+                        break;
+                    case ACTION_RIGHT_VIEW:
+                        break;
+                    case ACTION_TITLE_VIEW:
+                        break;
+                    default:
+                        break;
+                }
             }
         });
     }

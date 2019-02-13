@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="12dp"
+        android:src="@mipmap/round_search_white" />
+
+    <ImageView
+        android:id="@+id/iv_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="12dp"
+        android:layout_toEndOf="@id/iv_search"
+        android:src="@mipmap/outline_textsms_white" />
+
+    <TextView
+        android:id="@+id/tv_msg_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/iv_msg"
+        android:layout_alignTop="@id/iv_msg"
+        android:layout_marginEnd="-3dp"
+        android:layout_marginTop="-3dp"
+        android:background="@drawable/shape_msg_num"
+        android:gravity="center"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:maxLength="3"
+        android:text="99"
+        android:textColor="#ffffff"
+        android:textSize="9dp" />
+
+</RelativeLayout>

@@ -1,23 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:titlebar="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="#F4F4F4"
     tools:context=".MainActivity">
 
-    <com.mcgrady.xtitlebar.TitleBar
-        android:id="@+id/title_bar"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        titlebar:title="Title"
-        titlebar:rightText="Search"
-        titlebar:titleBarDrawableRes="@drawable/shape_gradient"/>
+        android:layout_height="256dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
-    <Button
-        android:id="@+id/btn_set_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:collapsedTitleGravity="center"
+            app:expandedTitleGravity="center"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:title="折叠效果">
 
-</LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/ic_titlebar_head"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"/>
+
+            <android.support.v7.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_collapseMode="pin"/>
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="pin"
+                app:titleBarColor="@android:color/transparent"/>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:divider="@drawable/pf_linearlayout_vertical_divider"
+            android:showDividers="middle|beginning|end">
+
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="标题栏"
+                app:titleColor="@android:color/white"
+                app:titleSize="18sp"
+                app:titleBarColor="#EB3D00" />
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="标题栏"
+                app:titleColor="@android:color/white"
+                app:titleSize="18sp"
+                app:leftDrawableRes="@mipmap/round_arrow_back_ios_white"
+                app:rightDrawableRes="@mipmap/round_check_white"
+                app:titleBarColor="#F38001"/>
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleColor="@android:color/black"
+                app:titleSize="18sp"
+                app:title="标题栏"
+                app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
+                app:leftTextColor="@android:color/black"
+                app:leftTextSize="16sp"
+                app:leftText="返回"
+                app:rightTextColor="@android:color/black"
+                app:rightTextSize="16sp"
+                app:rightText="确定"
+                app:titleBarColor="#FDFA00"/>
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleColor="@android:color/black"
+                app:titleSize="18sp"
+                app:title="跑马灯效果：功能1 功能2 功能3 功能4 功能5"
+                app:titleMarquee="true"
+                app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
+                app:leftTextColor="@android:color/black"
+                app:leftTextSize="16sp"
+                app:leftText="返回"
+                app:rightTextColor="@android:color/black"
+                app:rightTextSize="16sp"
+                app:rightText="确定"
+                app:titleBarColor="#00904A"/>
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="标题栏"
+                app:titleColor="@android:color/white"
+                app:titleSize="18sp"
+                app:layout_left_custom="@layout/layout_titlebar_custom_left"
+                app:layout_right_custom="@layout/layout_titlebar_custom_right"
+                app:titleBarColor="#0089E1"/>
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="标题栏"
+                app:titleColor="@android:color/white"
+                app:titleSize="18sp"
+                app:leftDrawableRes="@mipmap/round_arrow_back_ios_white"
+                app:leftTextColor="@android:color/white"
+                app:leftTextSize="16sp"
+                app:leftText="返回"
+                app:layout_right_custom="@layout/layout_titlebar_custom_right2"
+                app:titleBarColor="#0075C5"/>
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="标题栏"
+                app:titleColor="@android:color/white"
+                app:titleSize="18sp"
+                app:layout_left_custom="@layout/layout_titlebar_custom_left"
+                app:layout_right_custom="@layout/layout_titlebar_custom_right"
+                app:titleBarColor="#9A2574"/>
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="标题栏"
+                app:titleColor="@android:color/black"
+                app:titleSize="18sp"
+                app:layout_left_custom="@layout/layout_titlebar_custom_qrcode"
+                app:layout_right_custom="@layout/layout_titlebar_custom_msg"
+                app:titleBarColor="@android:color/white"/>
+
+            <com.mcgrady.xtitlebar.TitleBar
+                android:id="@+id/title_bar_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="渐变样式"
+                app:titleColor="@android:color/white"
+                app:titleSize="18sp"
+                app:leftText="返回"
+                app:leftTextColor="@android:color/white"
+                app:leftDrawableRes="@mipmap/round_arrow_back_ios_white"
+                app:leftTextSize="16sp"
+                app:rightText="设置"
+                app:rightTextColor="@android:color/white"
+                app:rightTextSize="16sp"
+                app:titleBarDrawableRes="@drawable/shape_gradient"/>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

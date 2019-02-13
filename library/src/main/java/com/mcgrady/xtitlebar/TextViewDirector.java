@@ -24,6 +24,7 @@ public class TextViewDirector {
     private TextUtils.TruncateAt ellipsize;
     private int color;
     private float size;
+    private int left, top, right, bottom;
     private LinearLayout.LayoutParams layoutParams;
     private View.OnClickListener listener;
 
@@ -38,6 +39,10 @@ public class TextViewDirector {
         ellipsize = builder.ellipsize;
         color = builder.color;
         size = builder.size;
+        left = builder.left;
+        top = builder.top;
+        right = builder.right;
+        bottom = builder.bottom;
         layoutParams = builder.layoutParams;
         text = builder.text;
         listener = builder.listener;
@@ -55,6 +60,7 @@ public class TextViewDirector {
         textView.setGravity(gravity);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
         textView.setTextColor(color);
+        textView.setPadding(left, top, right, bottom);
         textView.setSingleLine(singleLine);
         textView.setEllipsize(ellipsize);
         textView.setText(text);
@@ -73,6 +79,7 @@ public class TextViewDirector {
         private TextUtils.TruncateAt ellipsize;
         private int color;
         private float size;
+        private int left, top, right, bottom;
         private LinearLayout.LayoutParams layoutParams;
         private CharSequence text;
         private View.OnClickListener listener;
@@ -112,6 +119,15 @@ public class TextViewDirector {
 
         public Builder setTextSize(float val) {
             size = val;
+            return this;
+        }
+
+        public Builder setPadding(int val1, int val2, int val3, int val4) {
+            left = val1;
+            top = val2;
+            right = val3;
+            bottom = val4;
+
             return this;
         }
 

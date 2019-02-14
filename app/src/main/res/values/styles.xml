@@ -15,12 +15,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.FullTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="CustomTitleBarAttr">
+        <!--Title-->
+        <item name="titleBarHeight">?attr/actionBarSize</item>
+        <item name="titleBarColor">@android:color/white</item>
+        <item name="titleSize">14sp</item>
+        <item name="titleColor">@android:color/holo_blue_bright</item>
+        <!--LeftView-->
+        <item name="leftTextColor">@android:color/holo_blue_bright</item>
+        <item name="leftTextSize">14sp</item>
+        <item name="leftDrawableRes">@mipmap/ic_arrow_back_holo_light</item>
+        <!--RightView-->
+        <item name="rightTextColor">@android:color/holo_blue_bright</item>
+        <item name="rightTextSize">14sp</item>
+    </style>
 
 </resources>

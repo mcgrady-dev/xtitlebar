@@ -307,11 +307,11 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
         }
 
         if (view.equals(tvLfetView)) {
-            listener.onClick(view, TitleBarViewClickAction.ACTION_LEFT_VIEW);
+            listener.onClick(view, TitleBarClickAction.ACTION_LEFT_VIEW);
         } else if (view.equals(tvRightView)) {
-            listener.onClick(view, TitleBarViewClickAction.ACTION_RIGHT_VIEW);
+            listener.onClick(view, TitleBarClickAction.ACTION_RIGHT_VIEW);
         } else if (view.equals(tvTitleView)) {
-            listener.onClick(view, TitleBarViewClickAction.ACTION_TITLE_VIEW);
+            listener.onClick(view, TitleBarClickAction.ACTION_TITLE_VIEW);
         }
     }
 

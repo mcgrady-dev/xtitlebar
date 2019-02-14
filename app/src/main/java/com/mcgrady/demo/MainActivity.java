@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.mcgrady.demo.utils.BarUtils;
 import com.mcgrady.xtitlebar.TitleBar;
-import com.mcgrady.xtitlebar.TitleBarViewClickAction;
+import com.mcgrady.xtitlebar.TitleBarClickAction;
 import com.mcgrady.xtitlebar.interf.OnTitleBarListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         titleBar.setTitleBarListener(new OnTitleBarListener() {
             @Override
-            public void onClick(View view, TitleBarViewClickAction action) {
+            public void onClick(View view, TitleBarClickAction action) {
                 switch (action) {
                     case ACTION_LEFT_VIEW:
                         break;

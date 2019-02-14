@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
-        android:src="@mipmap/round_search_white" />
+        android:src="@mipmap/round_search_black" />
 
     <ImageView
         android:id="@+id/iv_add"
@@ -21,7 +21,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:layout_toEndOf="@id/iv_search"
-        android:src="@mipmap/round_add_white" />
+        android:src="@mipmap/round_add_black" />
 
     <ImageView
         android:id="@+id/iv_more"
@@ -31,6 +31,6 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="12dp"
         android:layout_toEndOf="@id/iv_search"
-        android:src="@mipmap/round_more_vert_white" />
+        android:src="@mipmap/round_more_vert_black" />
 
 </LinearLayout>

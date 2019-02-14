@@ -62,20 +62,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="标题栏"
-                app:titleColor="@android:color/white"
+                app:titleColor="@android:color/black"
                 app:titleSize="18sp"
-                app:titleBarColor="#EB3D00" />
+                app:titleBarColor="@android:color/white" />
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="标题栏"
-                app:titleColor="@android:color/white"
+                app:titleColor="@android:color/black"
                 app:titleSize="18sp"
-                app:leftDrawableRes="@mipmap/round_arrow_back_ios_white"
-                app:rightDrawableRes="@mipmap/round_check_white"
-                app:titleBarColor="#F38001"/>
+                app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
+                app:rightDrawableRes="@mipmap/round_check_black"
+                app:titleBarColor="@android:color/white"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_3"
@@ -91,7 +91,7 @@
                 app:rightTextColor="@android:color/black"
                 app:rightTextSize="16sp"
                 app:rightText="确定"
-                app:titleBarColor="#FDFA00"/>
+                app:titleBarColor="@android:color/white"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_4"
@@ -108,43 +108,39 @@
                 app:rightTextColor="@android:color/black"
                 app:rightTextSize="16sp"
                 app:rightText="确定"
-                app:titleBarColor="#00904A"/>
+                app:titleBarColor="@android:color/white"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="标题栏"
-                app:titleColor="@android:color/white"
+                app:titleColor="@android:color/black"
                 app:titleSize="18sp"
-                app:layout_left_custom="@layout/layout_titlebar_custom_left"
-                app:layout_right_custom="@layout/layout_titlebar_custom_right"
-                app:titleBarColor="#0089E1"/>
+                app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
+                app:leftTextColor="@android:color/black"
+                app:leftTextSize="16sp"
+                app:leftText="返回"
+                app:layout_right_custom="@layout/layout_titlebar_custom_right2"
+                app:titleBarColor="@android:color/white"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="标题栏"
-                app:titleColor="@android:color/white"
-                app:titleSize="18sp"
-                app:leftDrawableRes="@mipmap/round_arrow_back_ios_white"
-                app:leftTextColor="@android:color/white"
-                app:leftTextSize="16sp"
-                app:leftText="返回"
-                app:layout_right_custom="@layout/layout_titlebar_custom_right2"
-                app:titleBarColor="#0075C5"/>
+                app:layout_left_custom="@layout/layout_titlebar_custom_left"
+                app:layout_right_custom="@layout/layout_titlebar_custom_right"
+                app:layout_title_custom="@layout/layout_titlebar_custom_title"
+                app:titleBarColor="@android:color/white"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="标题栏"
-                app:titleColor="@android:color/white"
-                app:titleSize="18sp"
-                app:layout_left_custom="@layout/layout_titlebar_custom_left"
-                app:layout_right_custom="@layout/layout_titlebar_custom_right"
-                app:titleBarColor="#9A2574"/>
+                app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
+                app:rightDrawableRes="@mipmap/round_check_black"
+                app:layout_title_custom="@layout/layout_titlebar_custom_qrcode"
+                app:titleBarColor="@android:color/white"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_8"
@@ -155,6 +151,7 @@
                 app:titleSize="18sp"
                 app:layout_left_custom="@layout/layout_titlebar_custom_qrcode"
                 app:layout_right_custom="@layout/layout_titlebar_custom_msg"
+                app:layout_title_custom="@layout/layout_titlebar_custom_search"
                 app:titleBarColor="@android:color/white"/>
 
             <com.mcgrady.xtitlebar.TitleBar

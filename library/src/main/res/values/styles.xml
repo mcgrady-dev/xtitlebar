@@ -7,6 +7,8 @@
         <item name="titleBarColor">@android:color/white</item>
         <item name="titleSize">14sp</item>
         <item name="titleColor">@android:color/black</item>
+        <item name="titleViewLeftMargin">16dp</item>
+        <item name="titleViewRightMargin">16dp</item>
         <!--LeftView-->
         <item name="leftTextColor">@android:color/black</item>
         <item name="leftTextSize">14sp</item>

@@ -3,6 +3,7 @@ package com.mcgrady.xtitlebar;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -34,13 +35,14 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class TitleBar extends FrameLayout implements View.OnClickListener, Runnable {
 
-    private TextView tvLfetView, tvTitleView, tvRightView;
+    private TextView tvLeftView, tvTitleView, tvRightView;
     private View leftCustomView, titleCustomView, rightCustomView, lineView;
     private LinearLayout contentLayout;
     private OnTitleBarListener listener;
 
-    private int padding_10;
+    private int titleGravity;
     private int titleBarHeight;
+    private int padding_12;
 
     public TitleBar(Context context) {
         this(context, null);
@@ -69,7 +71,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
      */
     @SuppressLint("ObsoleteSdkInt")
     private void initViews(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        padding_10 = dp2px(context, 10);
+
+        padding_12 = dp2px(context, 12);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TitleBar, defStyleAttr, defStyleRes);
 
@@ -91,14 +94,14 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
 
             leftCustomView.setLayoutParams(leftLayoutParams);
         } else {
-            tvLfetView = new TextViewDirector.Builder()
+            tvLeftView = new TextViewDirector.Builder()
                     .with(context)
                     .setId(generateViewId())
                     .setLayoutParams(leftLayoutParams)
                     .setGravity(Gravity.CENTER)
+                    .setPadding(padding_12, 0, padding_12, 0)
                     .setTextColor(array.getColor(R.styleable.TitleBar_leftTextColor, 0))
                     .setTextSize(array.getDimensionPixelSize(R.styleable.TitleBar_leftTextSize, 0))
-                    .setPadding(padding_10, 0, padding_10, 0)
                     .setSingleLine(true)
                     .setEllipsize(TextUtils.TruncateAt.END)
                     .setText(array.getString(R.styleable.TitleBar_leftText))
@@ -107,7 +110,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
                     .construct();
 
             if (array.hasValue(R.styleable.TitleBar_leftDrawableRes)) {
-                DrawableUtils.setDrawableLeft(context, tvLfetView, array.getResourceId(R.styleable.TitleBar_leftDrawableRes, 0));
+                DrawableUtils.setDrawableLeft(context, tvLeftView, array.getResourceId(R.styleable.TitleBar_leftDrawableRes, 0));
+                tvLeftView.setCompoundDrawablePadding(array.getDimensionPixelOffset(R.styleable.TitleBar_leftDrawablePadding, 0));
             }
         }
 
@@ -117,8 +121,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
         ///////////////////////////////////////////////////////////////////////////
         LinearLayout.LayoutParams titleLayoutParams = new LinearLayout.LayoutParams(0, MATCH_PARENT);
         titleLayoutParams.weight = 1;
-        titleLayoutParams.leftMargin = padding_10;
-        titleLayoutParams.rightMargin = padding_10;
+        titleLayoutParams.leftMargin = array.getDimensionPixelOffset(R.styleable.TitleBar_titleViewLeftMargin, 0);
+        titleLayoutParams.rightMargin = array.getDimensionPixelOffset(R.styleable.TitleBar_titleViewRightMargin, 0);
         if (array.hasValue(R.styleable.TitleBar_layout_title_custom)) {
             titleCustomView = LayoutInflater.from(context).inflate(
                     array.getResourceId(R.styleable.TitleBar_layout_title_custom, 0), this, false);
@@ -129,11 +133,11 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
 
             titleCustomView.setLayoutParams(titleLayoutParams);
         } else {
+
             tvTitleView = new TextViewDirector.Builder()
                     .with(context)
                     .setId(generateViewId())
                     .setLayoutParams(titleLayoutParams)
-                    .setGravity(Gravity.CENTER)
                     .setTextColor(array.getColor(R.styleable.TitleBar_titleColor, 0))
                     .setTextSize(array.getDimensionPixelSize(R.styleable.TitleBar_titleSize, 0))
                     .setSingleLine(true)
@@ -142,6 +146,22 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
                     .setOnClickListener(this)
                     .create()
                     .construct();
+
+            titleGravity = array.getInteger(R.styleable.TitleBar_titleGravity, 0);
+            switch (titleGravity) {
+                case 0:
+                    tvTitleView.setGravity(Gravity.CENTER);
+                    break;
+                case 1:
+                    tvTitleView.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                    break;
+                case 2:
+                    tvTitleView.setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+                    break;
+                default:
+                    tvTitleView.setGravity(Gravity.CENTER);
+                    break;
+            }
 
             boolean titleMarquee = array.getBoolean(R.styleable.TitleBar_titleMarquee, false);
             if (titleMarquee) {
@@ -173,7 +193,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
                         .setId(generateViewId())
                         .setLayoutParams(rightLayoutParams)
                         .setGravity(Gravity.START | Gravity.CENTER_VERTICAL)
-                        .setPadding(padding_10, 0, padding_10, 0)
+                        .setPadding(dp2px(context, 12), 0, dp2px(context, 12), 0)
                         .setSingleLine(true)
                         .setOnClickListener(this)
                         .create()
@@ -188,7 +208,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
                         .setGravity(Gravity.CENTER)
                         .setTextColor(array.getColor(R.styleable.TitleBar_rightTextColor, 0))
                         .setTextSize(array.getDimensionPixelSize(R.styleable.TitleBar_rightTextSize, 0))
-                        .setPadding(padding_10, 0, padding_10, 0)
+                        .setPadding(padding_12, 0, padding_12, 0)
                         .setSingleLine(true)
                         .setEllipsize(TextUtils.TruncateAt.END)
                         .setText(array.getString(R.styleable.TitleBar_rightText))
@@ -232,8 +252,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
 
         if (leftCustomView != null) {
             contentLayout.addView(leftCustomView);
-        } else if (tvLfetView != null) {
-            contentLayout.addView(tvLfetView);
+        } else if (tvLeftView != null) {
+            contentLayout.addView(tvLeftView);
         }
 
         if (titleCustomView != null) {
@@ -257,8 +277,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
 
     @Override
     protected void onAttachedToWindow() {
-        if (tvLfetView != null) {
-            tvLfetView.setOnClickListener(this);
+        if (tvLeftView != null) {
+            tvLeftView.setOnClickListener(this);
         }
         if (tvTitleView != null) {
             tvTitleView.setOnClickListener(this);
@@ -271,8 +291,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
 
     @Override
     protected void onDetachedFromWindow() {
-        if (tvLfetView != null) {
-            tvLfetView.setOnClickListener(null);
+        if (tvLeftView != null) {
+            tvLeftView.setOnClickListener(null);
         }
         if (tvTitleView != null) {
             tvTitleView.setOnClickListener(null);
@@ -306,7 +326,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
             return;
         }
 
-        if (view.equals(tvLfetView)) {
+        if (view.equals(tvLeftView)) {
             listener.onClick(view, TitleBarClickAction.ACTION_LEFT_VIEW);
         } else if (view.equals(tvRightView)) {
             listener.onClick(view, TitleBarClickAction.ACTION_RIGHT_VIEW);
@@ -347,20 +367,20 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
     @Override
     public void run() {
         // 更新中间标题的内边距，避免向左或者向右偏移
-        int leftViewWidth = leftCustomView == null ? tvLfetView == null ? 0 : tvLfetView.getWidth() : leftCustomView.getWidth();
+        int leftViewWidth = leftCustomView == null ? tvLeftView == null ? 0 : tvLeftView.getWidth() : leftCustomView.getWidth();
         int rightViewWidth = rightCustomView == null ? tvRightView == null ? 0 : tvRightView.getWidth() : rightCustomView.getWidth();
         if (leftViewWidth != rightViewWidth) {
             if (leftViewWidth > rightViewWidth) {
                 if (titleCustomView != null) {
                     titleCustomView.setPadding(0, 0, leftViewWidth - rightViewWidth, 0);
                 } else if (tvTitleView != null) {
-                    tvTitleView.setPadding(0, 0, leftViewWidth - rightViewWidth, 0);
+                    tvTitleView.setPadding(0, 0, titleGravity == 0 ? leftViewWidth - rightViewWidth : 0, 0);
                 }
             } else {
                 if (titleCustomView != null) {
                     titleCustomView.setPadding(rightViewWidth - leftViewWidth, 0, 0, 0);
                 } else if (tvTitleView != null) {
-                    tvTitleView.setPadding(rightViewWidth - leftViewWidth, 0, 0, 0);
+                    tvTitleView.setPadding(titleGravity == 0 ? rightViewWidth - leftViewWidth : 0, 0, 0, 0);
                 }
             }
         }
@@ -373,6 +393,17 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
     public void setTitle(CharSequence text) {
         if (tvTitleView != null) {
             tvTitleView.setText(text);
+            post(this);
+        }
+    }
+
+    /**
+     * 设置标题对齐方式
+     * @param gravity
+     */
+    public void setTitleGravity(int gravity) {
+        if (tvTitleView != null) {
+            tvTitleView.setGravity(gravity);
             post(this);
         }
     }

@@ -20,7 +20,7 @@
             app:collapsedTitleGravity="center"
             app:expandedTitleGravity="center"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="XTitleBar">
+            app:title="XTITLEBAR">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -74,10 +74,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="标题栏"
+                app:titleGravity="left"
                 app:titleColor="@android:color/black"
                 app:titleSize="18sp"
                 app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
-                app:rightDrawableRes="@mipmap/round_check_black"
+                app:rightDrawableRes="@mipmap/round_search_black"
                 app:titleBarColor="@android:color/white"/>
 
             <com.mcgrady.xtitlebar.TitleBar
@@ -87,6 +88,7 @@
                 app:titleColor="@android:color/black"
                 app:titleSize="18sp"
                 app:title="标题栏"
+                app:titleGravity="left"
                 app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
                 app:leftTextColor="@android:color/black"
                 app:leftTextSize="16sp"

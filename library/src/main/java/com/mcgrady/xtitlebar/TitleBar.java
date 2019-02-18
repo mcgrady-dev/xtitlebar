@@ -3,10 +3,13 @@ package com.mcgrady.xtitlebar;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -18,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.mcgrady.xtitlebar.interf.OnTitleBarCustomViewClickListener;
 import com.mcgrady.xtitlebar.interf.OnTitleBarListener;
 import com.mcgrady.xtitlebar.utils.DrawableUtils;
 
@@ -36,7 +40,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 public class TitleBar extends FrameLayout implements View.OnClickListener, Runnable {
 
     private TextView tvLeftView, tvTitleView, tvRightView;
-    private View leftCustomView, titleCustomView, rightCustomView, lineView;
+    private View leftCustomView, titleCustomView, rightCustomView, dividerLineView;
     private LinearLayout contentLayout;
     private OnTitleBarListener listener;
 
@@ -218,14 +222,18 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
             }
         }
 
+
         ///////////////////////////////////////////////////////////////////////////
         // Line View
         ///////////////////////////////////////////////////////////////////////////
-        lineView = new View(context);
-        lineView.setId(generateViewId());
+        dividerLineView = new View(context);
+        dividerLineView.setId(generateViewId());
         LayoutParams lineLayoutParams = new LayoutParams(MATCH_PARENT, 1);
         lineLayoutParams.gravity = Gravity.BOTTOM;
-        lineView.setLayoutParams(lineLayoutParams);
+        dividerLineView.setLayoutParams(lineLayoutParams);
+        setDividerLineVisible(array.getBoolean(R.styleable.TitleBar_dividerLineVisibility, false));
+        setDividerLineSize(array.getDimensionPixelSize(R.styleable.TitleBar_dividerLineSize, 1));
+        setDividerLineColor(array.getDrawable(R.styleable.TitleBar_dividerLineColor));
 
 
         ///////////////////////////////////////////////////////////////////////////
@@ -269,7 +277,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
         }
 
         addView(contentLayout, 0);
-        addView(lineView, 1);
+        addView(dividerLineView, 1);
 
         // 初始化边距
         post(this);
@@ -307,7 +315,7 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
      * 注意：不支持自定义view点击事件
      * @param listener
      */
-    public void setTitleBarListener(OnTitleBarListener listener) {
+    public void setOnTitleBarClickListener(OnTitleBarListener listener) {
         this.listener = listener;
     }
 
@@ -398,6 +406,27 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
     }
 
     /**
+     * 设置标题颜色
+     * @param color
+     */
+    public void setTitleColor(@ColorInt int color) {
+        if (tvTitleView != null) {
+            tvTitleView.setTextColor(color);
+        }
+    }
+
+    /**
+     * 设置标题字体大小
+     * @param size
+     */
+    public void setTitleSize(int size) {
+        if (tvTitleView != null) {
+            tvTitleView.setTextSize(size);
+            post(this);
+        }
+    }
+
+    /**
      * 设置标题对齐方式
      * @param gravity
      */
@@ -406,6 +435,196 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
             tvTitleView.setGravity(gravity);
             post(this);
         }
+    }
+
+    /**
+     * 设置左边文字
+     * @param text
+     */
+    public void setLeftText(String text) {
+        if (tvLeftView != null) {
+            tvLeftView.setText(text);
+            post(this);
+        }
+    }
+
+    /**
+     * 设置左边文字颜色
+     * @param color
+     */
+    public void setLeftTextColor(@ColorInt int color) {
+        if (tvLeftView != null) {
+            tvLeftView.setTextColor(color);
+        }
+    }
+
+    /**
+     * 设置左边文字大小
+     * @param size
+     */
+    public void setLeftTextSize(int size) {
+        if (tvLeftView != null) {
+            tvLeftView.setTextSize(size);
+            post(this);
+        }
+    }
+
+    /**
+     * 设置左边图标
+     * @param resId
+     */
+    public void setLeftDrawable(int resId) {
+        if (tvLeftView != null) {
+            DrawableUtils.setDrawableLeft(getContext(), tvLeftView, resId);
+            post(this);
+        }
+    }
+
+    /**
+     * 设置右边图标
+     * @param resId
+     */
+    public void setRightDrawable(int resId) {
+        if (tvRightView != null) {
+            DrawableUtils.setDrawableLeft(getContext(), tvRightView, resId);
+            post(this);
+        }
+    }
+
+    public View getTitleCustomView() {
+        return titleCustomView;
+    }
+
+    public View getLeftCustomView() {
+        return leftCustomView;
+    }
+
+    public View getRightCustomView() {
+        return rightCustomView;
+    }
+
+    public <T extends View> T findLeftChildViewById(@IdRes int id) {
+        if (leftCustomView == null) {
+            return null;
+        }
+
+        return leftCustomView.findViewById(id);
+    }
+
+    public <T extends View> T findRightChildViewById(@IdRes int id) {
+        if (rightCustomView == null) {
+            return null;
+        }
+
+        return rightCustomView.findViewById(id);
+    }
+
+    public <T extends View> T findTitleChildViewById(@IdRes int id) {
+        if (titleCustomView == null) {
+            return null;
+        }
+
+        return titleCustomView.findViewById(id);
+    }
+
+
+    /**
+     * 设置左自定义View点击事件
+     * @param listener
+     * @param ids
+     */
+    public void setOnLeftViewsClick(OnTitleBarCustomViewClickListener listener, int... ids) {
+        if (leftCustomView != null) {
+            for (int id : ids) {
+                View viewById = leftCustomView.findViewById(id);
+                if (viewById != null) {
+                    viewById.setOnClickListener(view -> {
+                        if (listener != null) {
+                            listener.onClick(view);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置Tile自定义View点击事件
+     * @param listener
+     * @param ids
+     */
+    public void setOnTitleViewsClick(OnTitleBarCustomViewClickListener listener, int... ids) {
+        if (titleCustomView != null) {
+            for (int id : ids) {
+                View viewById = titleCustomView.findViewById(id);
+                if (viewById != null) {
+                    viewById.setOnClickListener(view -> {
+                        if (listener != null) {
+                            listener.onClick(view);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置右自定义View点击事件
+     * @param listener
+     * @param ids
+     */
+    public void setOnRightViewsClick(OnTitleBarCustomViewClickListener listener, int... ids) {
+        if (rightCustomView != null) {
+            for (int id : ids) {
+                View viewById = rightCustomView.findViewById(id);
+                if (viewById != null) {
+                    viewById.setOnClickListener(view -> {
+                        if (listener != null) {
+                            listener.onClick(view);
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置分割线是否显示
+     * @param visible
+     */
+    public void setDividerLineVisible(boolean visible) {
+        dividerLineView.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+
+    /**
+     * 设置分割线颜色
+     * @param color
+     */
+    public void setDividerLineColor(int color) {
+        setDividerLineColor(new ColorDrawable(color));
+    }
+
+    /**
+     * 设置分割线颜色
+     * @param drawable
+     */
+    public void setDividerLineColor(Drawable drawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            dividerLineView.setBackground(drawable);
+        } else {
+            dividerLineView.setBackgroundDrawable(drawable);
+        }
+    }
+
+    /**
+     * 设置分割线大小
+     * @param size
+     */
+    public void setDividerLineSize(int size) {
+        ViewGroup.LayoutParams layoutParams = dividerLineView.getLayoutParams();
+        layoutParams.height = size;
+        dividerLineView.setLayoutParams(layoutParams);
     }
 
     /**

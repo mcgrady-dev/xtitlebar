@@ -67,7 +67,9 @@
                 app:title="标题栏"
                 app:titleColor="@android:color/black"
                 app:titleSize="18sp"
-                app:titleBarColor="@android:color/white" />
+                app:titleBarColor="@android:color/white"
+                app:dividerLineVisibility="true"
+                app:dividerLineColor="#FFECECEC"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_2"
@@ -79,7 +81,9 @@
                 app:titleSize="18sp"
                 app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
                 app:rightDrawableRes="@mipmap/round_search_black"
-                app:titleBarColor="@android:color/white"/>
+                app:titleBarColor="@android:color/white"
+                app:dividerLineVisibility="true"
+                app:dividerLineColor="#FFECECEC"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_3"
@@ -96,7 +100,9 @@
                 app:rightTextColor="@android:color/black"
                 app:rightTextSize="16sp"
                 app:rightText="确定"
-                app:titleBarColor="@android:color/white"/>
+                app:titleBarColor="@android:color/white"
+                app:dividerLineVisibility="true"
+                app:dividerLineColor="#FFECECEC"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_4"
@@ -113,7 +119,9 @@
                 app:rightTextColor="@android:color/black"
                 app:rightTextSize="16sp"
                 app:rightText="确定"
-                app:titleBarColor="@android:color/white"/>
+                app:titleBarColor="@android:color/white"
+                app:dividerLineVisibility="true"
+                app:dividerLineColor="#FFECECEC"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_5"
@@ -127,7 +135,9 @@
                 app:leftTextSize="16sp"
                 app:leftText="返回"
                 app:layout_right_custom="@layout/layout_titlebar_custom_right2"
-                app:titleBarColor="@android:color/white"/>
+                app:titleBarColor="@android:color/white"
+                app:dividerLineVisibility="true"
+                app:dividerLineColor="#FFECECEC"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_6"
@@ -145,7 +155,9 @@
                 app:leftDrawableRes="@mipmap/round_arrow_back_ios_black"
                 app:rightDrawableRes="@mipmap/round_check_black"
                 app:layout_title_custom="@layout/layout_titlebar_custom_qrcode"
-                app:titleBarColor="@android:color/white"/>
+                app:titleBarColor="@android:color/white"
+                app:dividerLineVisibility="true"
+                app:dividerLineColor="#FFECECEC"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_8"
@@ -156,7 +168,9 @@
                 app:rightTextSize="16sp"
                 app:rightText="搜索"
                 app:layout_title_custom="@layout/layout_titlebar_custom_search"
-                app:titleBarColor="@android:color/white"/>
+                app:titleBarColor="@android:color/white"
+                app:dividerLineVisibility="true"
+                app:dividerLineColor="#FFECECEC"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_9"
@@ -168,7 +182,9 @@
                 app:layout_left_custom="@layout/layout_titlebar_custom_qrcode"
                 app:layout_right_custom="@layout/layout_titlebar_custom_msg"
                 app:layout_title_custom="@layout/layout_titlebar_custom_search"
-                app:titleBarColor="@android:color/white"/>
+                app:titleBarColor="@android:color/white"
+                app:dividerLineVisibility="true"
+                app:dividerLineColor="#FFECECEC"/>
 
             <com.mcgrady.xtitlebar.TitleBar
                 android:id="@+id/title_bar_10"

@@ -88,5 +88,10 @@
         <!-- 中间自定义布局, 对应centerType_CustomView -->
         <attr name="layout_title_custom" format="reference" />
 
+        <!--分割线-->
+        <attr name="dividerLineVisibility" format="boolean" />
+        <attr name="dividerLineColor" format="reference|color" />
+        <attr name="dividerLineSize" format="dimension" />
+
     </declare-styleable>
 </resources>

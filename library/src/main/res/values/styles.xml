@@ -15,6 +15,7 @@
         <!--RightView-->
         <item name="rightTextColor">@android:color/black</item>
         <item name="rightTextSize">14sp</item>
+
     </style>
 
 </resources>

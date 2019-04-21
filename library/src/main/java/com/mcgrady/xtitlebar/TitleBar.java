@@ -1,6 +1,7 @@
 package com.mcgrady.xtitlebar;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,7 +9,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -57,11 +57,16 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
     }
 
     public TitleBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, R.style.DefaultTitleBarRes);
+        super(context, attrs, defStyleAttr);
+
+        initViews(context, attrs, defStyleAttr, 0);
+        formattionViews(context);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public TitleBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+
         initViews(context, attrs, defStyleAttr, defStyleRes);
         formattionViews(context);
     }
@@ -78,7 +83,8 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
 
         padding_12 = dp2px(context, 12);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TitleBar, defStyleAttr, defStyleRes);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.TitleBar, defStyleAttr,
+                defStyleRes <= 0 ? R.style.DefaultTitleBarRes : defStyleRes);
 
         titleBarHeight = (int) array.getDimension(R.styleable.TitleBar_titleBarHeight, 0);
 

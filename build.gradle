@@ -45,7 +45,7 @@ ext {
     userOrg = 'mcgrady911'     //用户名
     repoName = 'maven'         //仓库名
     groupId = 'com.mcgrady'    //groupId
-    publishVersion = '1.0.1'   //版本号
+    publishVersion = '1.0.2'   //版本号
     desc = ' global title bar for android'
     website = 'https://github.com/mcgrady911/XTitleBar'    //github地址
     licences = ['Apache-2.0']

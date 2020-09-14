@@ -3,10 +3,13 @@ package com.mcgrady.xtitlebar;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IdRes;
@@ -15,6 +18,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -122,6 +126,33 @@ public class TitleBar extends FrameLayout implements View.OnClickListener, Runna
             if (array.hasValue(R.styleable.TitleBar_leftDrawableRes)) {
                 DrawableUtils.setDrawableLeft(context, tvLeftView, array.getResourceId(R.styleable.TitleBar_leftDrawableRes, 0));
                 tvLeftView.setCompoundDrawablePadding(array.getDimensionPixelOffset(R.styleable.TitleBar_leftDrawablePadding, 0));
+            }
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+
+                int[][] stateList = new int[][]{
+                        new int[]{android.R.attr.state_pressed},
+                        new int[]{android.R.attr.state_focused},
+                        new int[]{android.R.attr.state_activated},
+                        new int[]{}
+                };
+
+                //深蓝
+                int normalColor = Color.parseColor("#303F9F");
+                //玫瑰红
+                int pressedColor = Color.parseColor("#FF4081");
+                int[] stateColorList = new int[]{
+                        pressedColor,
+                        pressedColor,
+                        pressedColor,
+                        normalColor
+                };
+                ColorStateList colorStateList = new ColorStateList(stateList, stateColorList);
+
+                RippleDrawable rippleDrawable = new RippleDrawable(colorStateList, null, null);
+
+
+                tvLeftView.setBackground(rippleDrawable);
             }
         }
 

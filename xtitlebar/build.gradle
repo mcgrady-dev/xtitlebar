@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 3
         versionName "1.0.2"
         multiDexEnabled true
@@ -38,13 +38,13 @@ dependencies {
 }
 
 
-publish {
-    artifactId = 'xtitlebar'
-    uploadName = 'XTitleBar'
-    userOrg = rootProject.userOrg
-    groupId = rootProject.groupId
-    publishVersion = rootProject.publishVersion
-    desc = rootProject.desc
-    website = rootProject.website
-    licences = rootProject.licences
-}
+//publish {
+//    artifactId = 'xtitlebar'
+//    uploadName = 'XTitleBar'
+//    userOrg = rootProject.userOrg
+//    groupId = rootProject.groupId
+//    publishVersion = rootProject.publishVersion
+//    desc = rootProject.desc
+//    website = rootProject.website
+//    licences = rootProject.licences
+//}

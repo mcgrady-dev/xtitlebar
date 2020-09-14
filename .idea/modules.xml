@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/XTitleBar.iml" filepath="$PROJECT_DIR$/XTitleBar.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/XTitleBar.iml" filepath="$PROJECT_DIR$/XTitleBar.iml" group="XTitleBar" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="XTitleBar/app" />
+      <module fileurl="file://$PROJECT_DIR$/xtitlebar/xtitlebar.iml" filepath="$PROJECT_DIR$/xtitlebar/xtitlebar.iml" group="XTitleBar/xtitlebar" />
     </modules>
   </component>
 </project>

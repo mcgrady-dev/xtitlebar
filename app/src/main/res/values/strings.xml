@@ -1,4 +1,34 @@
 <resources>
     <string name="app_name">XTitleBar</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="content">长期以来，澳大利亚等西方国家都喜欢将自己标榜为“新闻自由，言论自由”的榜样，但实际上，不少西方国家的所作所为都与此大相径庭。尤其是澳大利亚，更是亲自撕下了“新闻自由”的虚伪面，让大家看清了“真面目”。
+
+2019年6月5日，澳广播公司悉尼总部以及《每日电讯报》一名女记者的住处，突然遭到了警方的检查。外界普遍认为，澳警方对他们进行突袭的原因，是他们此前发表的一些言论。
+
+
+事发之前，澳广播公司报道了澳大利亚士兵在阿富汗杀害平民的新闻，并表示这些士兵犯下了战争罪。而《每日电讯报》则报道称，政府正在尝试通过一些技术手段来大规模的监听本国民众。
+
+这起事件发生之后，澳新闻工作者爆发了集体抗议行动，他们认为澳当局的所作所为已经严重威胁到了调查新闻的开展，这将会让公众失去知情权。但实际上，澳大利亚到目前为止已经通过了60多条限制“新闻自由”的法律，这足以说明澳大利亚对“新闻自由”的真实态度是什么。
+
+
+有分析人士则指出，澳大利亚的“新闻自由”只不过是执政者的“政治正确”。当媒体发表虚假言论，抹黑他国时，这是新闻自由。而当媒体发表一些执政者不愿看到的真实情况时，这些言论就成了错误的，拼命进行打压。
+
+而近日，澳大利亚情报人员更是直接闯入了中国驻澳媒体记者住所，强行将手机、电脑等电子设备收走，并且对记者进行了长时间的盘问。但事实证明，中国驻澳记者严格遵守当地法律，没有做出任何越界的事情，根本不存在干预澳内政，破坏澳国家安全的行为。
+
+
+反观澳大利亚作为“五眼联盟”成员，一直都在监听别国信息，比如在华设立情报站，在大使馆安置窃听器等等，这些行为严重危害中国国家安全。由此可见，澳大利亚完全就是贼喊捉贼。
+
+澳当局针对中国记者的粗暴作为，将会严重阻碍两国的正常交流，同时还侵犯了中国记者与相关机构的正当权益。澳此举也与自己宣扬的“新闻自由”完全背道而驰。希望澳国内的“反华”势力能够悬崖勒马，停下抹黑、污蔑中国的举措，否则必将反噬自己。
+
+
+免责声明：本文由《每天十点港澳台》原创创作，图片来源网络，如有侵权请联系告知，部分消息参考：环球网、北京晚报</string>
+    <string name="title_activity_basic">BasicActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

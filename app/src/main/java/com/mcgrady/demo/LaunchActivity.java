@@ -53,7 +53,8 @@ public class LaunchActivity extends AppCompatActivity {
                 if (position == 0) {
                     startActivity(new Intent(LaunchActivity.this, QuickPreviewActivity.class));
                 } else if (position == 1) {
-                    Intent intent = new Intent(LaunchActivity.this, BasicActivity.class);
+//                    Intent intent = new Intent(LaunchActivity.this, BasicActivity.class);
+                    Intent intent = new Intent(LaunchActivity.this, NavDrawerActivity.class);
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(LaunchActivity.this, MainActivity.class);

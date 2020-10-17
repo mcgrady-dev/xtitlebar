@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         titlebar:centerText="标题栏"
         titlebar:centerType="textView"
-        titlebar:leftDrawable="@drawable/xtitlebar_back_normal"
+        titlebar:leftDrawable="@drawable/titlebar_arrow_back_24_gray"
         titlebar:leftDrawablePadding="0dp"
         titlebar:leftText="返回"
         titlebar:leftType="textView" />

@@ -5,11 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.gyf.immersionbar.ImmersionBar;
 import com.mcgrady.xtitlebar.TitleBar;
-
-/**
- * Created by liufei on 2017/8/29.
- */
 
 public class QuickPreviewActivity extends AppCompatActivity {
 
@@ -17,6 +14,12 @@ public class QuickPreviewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quick_preview);
+
+        ImmersionBar.with(this)
+                .titleBar(R.id.titlebar)
+                .statusBarDarkFont(true)
+                .init();
+
         ((TitleBar) findViewById(R.id.titlebar)).setListener(new TitleBar.OnTitleBarListener() {
             @Override
             public void onClicked(View v, int action, String extra) {

@@ -29,4 +29,18 @@
 
     <style name="AppTheme.FullTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TitleBarLeftImageStyle">
+        <item name="leftType">imageButton</item>
+        <item name="leftImageResource">@drawable/ic_arrow_back_24_gray</item>
+    </style>
+
+    <style name="TitleBarLeftTextStyle">
+        <item name="leftType">imageButton</item>
+        <item name="leftImageResource">@drawable/ic_arrow_back_24_gray</item>
+    </style>
+
+    <style name="TitleBarLeftImage.CenterTextStyle" parent="TitleBarLeftImageStyle">
+        <item name="centerType">textView</item>
+    </style>
+
 </resources>

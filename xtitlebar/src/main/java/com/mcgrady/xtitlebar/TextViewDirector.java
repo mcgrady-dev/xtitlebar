@@ -14,7 +14,7 @@ import android.widget.TextView;
  * @date: 2019/1/25
  */
 
-public class TextViewDirector {
+class TextViewDirector {
 
     private Context context;
     private int id;

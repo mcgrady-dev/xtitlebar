@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mcgrady.xtitlebar.TitleBar;
-import com.mcgrady.xtitlebar.Utils;
+import com.mcgrady.xtitlebar.util.Utils;
 
 public class MainActivity extends AppCompatActivity {
     private double maxAlphaEffectHeight;

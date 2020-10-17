@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="XTitleBar">
+<!--        <attr name="titleBarTheme" format="string" />-->
         <!-- 标题栏背景 图片或颜色 -->
         <attr name="titleBarColor" format="color" />
         <!-- 填充状态栏 -->
@@ -31,7 +32,7 @@
         <!-- TextView 文字, 对应leftType_TextView -->
         <attr name="leftText" format="string" />
         <!-- TextView 颜色, 对应leftType_TextView -->
-        <attr name="leftTextColor" format="color" />
+        <attr name="leftTextColor" format="reference|color" />
         <!-- TextView 字体大小, 对应leftType_TextView -->
         <attr name="leftTextSize" format="dimension" />
         <!-- TextView 左边图片, 对应leftType_TextView -->
@@ -42,6 +43,7 @@
         <attr name="leftImageResource" format="reference" />
         <!-- 左边自定义布局, 对应leftType_CustomView -->
         <attr name="leftCustomView" format="reference" />
+        <attr name="leftBackgroundDrawable" format="reference" />
 
         <!-- 右边视图类型 -->
         <attr name="rightType">
@@ -53,13 +55,14 @@
         <!-- TextView 文字, 对应rightType_TextView -->
         <attr name="rightText" format="string" />
         <!-- TextView 颜色, 对应rightType_TextView -->
-        <attr name="rightTextColor" format="color" />
+        <attr name="rightTextColor" format="reference|color" />
         <!-- TextView 字体大小, 对应rightType_TextView -->
         <attr name="rightTextSize" format="dimension" />
         <!-- ImageView 资源, 对应rightType_ImageBotton -->
         <attr name="rightImageResource" format="reference" />
         <!-- 右边自定义布局, 对应rightType_CustomView -->
         <attr name="rightCustomView" format="reference" />
+        <attr name="rightBackgroundDrawable" format="reference" />
 
         <!-- 中间视图类型 -->
         <attr name="centerType">
@@ -93,4 +96,5 @@
         <!-- 中间自定义布局, 对应centerType_CustomView -->
         <attr name="centerCustomView" format="reference" />
     </declare-styleable>
+
 </resources>

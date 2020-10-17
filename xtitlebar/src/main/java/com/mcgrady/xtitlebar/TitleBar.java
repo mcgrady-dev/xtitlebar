@@ -1,11 +1,14 @@
 package com.mcgrady.xtitlebar;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -26,12 +29,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mcgrady.xtitlebar.style.BaseTitleBarStyle;
+import com.mcgrady.xtitlebar.style.ITitleBarStyle;
+import com.mcgrady.xtitlebar.style.TitleBarDefaultStyle;
+import com.mcgrady.xtitlebar.util.Utils;
+
 
 /**
  * Created by mcgrady on 2019/1/22.
  */
 public class TitleBar extends RelativeLayout implements View.OnClickListener {
-
+    private View viewStatusBarFill;                     // 状态栏填充视图
     private View viewBottomLine;                        // 分隔线视图
     private View viewBottomShadow;                      // 底部阴影
     private RelativeLayout rlMain;                      // 主视图
@@ -52,6 +60,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
     private ImageView ivVoice;
     private View centerCustomView;                      // 中间自定义视图
 
+    private boolean fillStatusBar;                      // 是否撑起状态栏, true时,标题栏浸入状态栏
     private int titleBarColor;                          // 标题栏背景颜色
     private int titleBarHeight;                         // 标题栏高度
     private int statusBarColor;                         // 状态栏颜色
@@ -67,6 +76,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
     private int leftDrawable;                           // 左边TextView drawableLeft资源
     private float leftDrawablePadding;                  // 左边TextView drawablePadding
     private int leftImageResource;                      // 左边图片资源
+    private Drawable leftBackgroundDrawable;            // 左边背景资源
     private int leftCustomViewRes;                      // 左边自定义视图布局资源
 
     private int rightType;                              // 右边视图类型
@@ -74,6 +84,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
     private int rightTextColor;                         // 右边TextView颜色
     private float rightTextSize;                        // 右边TextView文字大小
     private int rightImageResource;                     // 右边图片资源
+    private Drawable rightBackgroundDrawable;           // 右边背景资源
     private int rightCustomViewRes;                     // 右边自定义视图布局资源
 
     private int centerType;                             // 中间视图类型
@@ -116,7 +127,16 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
 
     public TitleBar(Context context, AttributeSet attrs) {
         super(context, attrs);
-        loadAttributes(context, attrs);
+
+        loadAttributes(context, attrs, 0);
+        initGlobalViews(context);
+        initMainViews(context);
+    }
+
+    public TitleBar(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+
+        loadAttributes(context, attrs, defStyleAttr);
         initGlobalViews(context);
         initMainViews(context);
     }
@@ -129,27 +149,34 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         WRAP_CONTENT = ViewGroup.LayoutParams.WRAP_CONTENT;
     }
 
-    private void loadAttributes(Context context, AttributeSet attrs) {
+    private void loadAttributes(Context context, AttributeSet attrs, int defStyleAttr) {
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.XTitleBar);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.XTitleBar, defStyleAttr, R.style.TitleBarDefaultStyle);
 
-        titleBarColor = array.getColor(R.styleable.XTitleBar_titleBarColor, Color.parseColor("#ffffff"));
-        titleBarHeight = (int) array.getDimension(R.styleable.XTitleBar_titleBarHeight, Utils.getActionBarHeight(context));
-        statusBarColor = array.getColor(R.styleable.XTitleBar_statusBarColor, Color.parseColor("#ffffff"));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // notice 未引入沉浸式标题栏之前,隐藏标题栏撑起布局
+            fillStatusBar = array.getBoolean(R.styleable.XTitleBar_fillStatusBar, false);
+        }
 
-        showBottomLine = array.getBoolean(R.styleable.XTitleBar_showBottomLine, true);
-        bottomLineColor = array.getColor(R.styleable.XTitleBar_bottomLineColor, Color.parseColor("#dddddd"));
+        titleBarColor = array.getColor(R.styleable.XTitleBar_titleBarColor, 0);
+        titleBarHeight = (int) array.getDimension(R.styleable.XTitleBar_titleBarHeight, Utils.dp2px(56));
+        statusBarColor = array.getColor(R.styleable.XTitleBar_statusBarColor, 0);
+
+        showBottomLine = array.getBoolean(R.styleable.XTitleBar_showBottomLine, false);
+        bottomLineColor = array.getColor(R.styleable.XTitleBar_bottomLineColor, 0);
         bottomShadowHeight = array.getDimension(R.styleable.XTitleBar_bottomShadowHeight, Utils.dp2px(0));
 
         leftType = array.getInt(R.styleable.XTitleBar_leftType, TYPE_LEFT_NONE);
         if (leftType == TYPE_LEFT_TEXTVIEW) {
             leftText = array.getString(R.styleable.XTitleBar_leftText);
-            leftTextColor = array.getColor(R.styleable.XTitleBar_leftTextColor, getResources().getColor(R.color.xtitlebar_text_selector));
-            leftTextSize = array.getDimension(R.styleable.XTitleBar_leftTextSize, Utils.dp2px(16));
+            leftTextColor = array.getColor(R.styleable.XTitleBar_leftTextColor, 0);
+            leftTextSize = array.getDimension(R.styleable.XTitleBar_leftTextSize, 0);
             leftDrawable = array.getResourceId(R.styleable.XTitleBar_leftDrawable, 0);
             leftDrawablePadding = array.getDimension(R.styleable.XTitleBar_leftDrawablePadding, 5);
+            leftBackgroundDrawable = array.getDrawable(R.styleable.XTitleBar_leftBackgroundDrawable);
         } else if (leftType == TYPE_LEFT_IMAGEBUTTON) {
-            leftImageResource = array.getResourceId(R.styleable.XTitleBar_leftImageResource, R.drawable.xtitlebar_reback_selector);
+            leftImageResource = array.getResourceId(R.styleable.XTitleBar_leftImageResource, 0);
+            leftBackgroundDrawable = array.getDrawable(R.styleable.XTitleBar_leftBackgroundDrawable);
         } else if (leftType == TYPE_LEFT_CUSTOM_VIEW) {
             leftCustomViewRes = array.getResourceId(R.styleable.XTitleBar_leftCustomView, 0);
         }
@@ -157,10 +184,12 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         rightType = array.getInt(R.styleable.XTitleBar_rightType, TYPE_RIGHT_NONE);
         if (rightType == TYPE_RIGHT_TEXTVIEW) {
             rightText = array.getString(R.styleable.XTitleBar_rightText);
-            rightTextColor = array.getColor(R.styleable.XTitleBar_rightTextColor, getResources().getColor(R.color.xtitlebar_text_selector));
-            rightTextSize = array.getDimension(R.styleable.XTitleBar_rightTextSize, Utils.dp2px(16));
+            rightTextColor = array.getColor(R.styleable.XTitleBar_rightTextColor, 0);
+            rightTextSize = array.getDimension(R.styleable.XTitleBar_rightTextSize, 0);
+            rightBackgroundDrawable = array.getDrawable(R.styleable.XTitleBar_rightBackgroundDrawable);
         } else if (rightType == TYPE_RIGHT_IMAGEBUTTON) {
             rightImageResource = array.getResourceId(R.styleable.XTitleBar_rightImageResource, 0);
+            rightBackgroundDrawable = array.getDrawable(R.styleable.XTitleBar_rightBackgroundDrawable);
         } else if (rightType == TYPE_RIGHT_CUSTOM_VIEW) {
             rightCustomViewRes = array.getResourceId(R.styleable.XTitleBar_rightCustomView, 0);
         }
@@ -168,15 +197,15 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         centerType = array.getInt(R.styleable.XTitleBar_centerType, TYPE_CENTER_NONE);
         if (centerType == TYPE_CENTER_TEXTVIEW) {
             centerText = array.getString(R.styleable.XTitleBar_centerText);
-            centerTextColor = array.getColor(R.styleable.XTitleBar_centerTextColor, Color.parseColor("#333333"));
-            centerTextSize = array.getDimension(R.styleable.XTitleBar_centerTextSize, Utils.dp2px(18));
+            centerTextColor = array.getColor(R.styleable.XTitleBar_centerTextColor, 0);
+            centerTextSize = array.getDimension(R.styleable.XTitleBar_centerTextSize, 0);
             centerTextMarquee = array.getBoolean(R.styleable.XTitleBar_centerTextMarquee, true);
             centerSubText = array.getString(R.styleable.XTitleBar_centerSubText);
-            centerSubTextColor = array.getColor(R.styleable.XTitleBar_centerSubTextColor, Color.parseColor("#666666"));
-            centerSubTextSize = array.getDimension(R.styleable.XTitleBar_centerSubTextSize, Utils.dp2px(11));
+            centerSubTextColor = array.getColor(R.styleable.XTitleBar_centerSubTextColor, 0);
+            centerSubTextSize = array.getDimension(R.styleable.XTitleBar_centerSubTextSize, 0);
         } else if (centerType == TYPE_CENTER_SEARCHVIEW) {
             centerSearchEditable = array.getBoolean(R.styleable.XTitleBar_centerSearchEditable, true);
-            centerSearchBgResource = array.getResourceId(R.styleable.XTitleBar_centerSearchBg, R.drawable.xtitlebar_search_gray_shape);
+            centerSearchBgResource = array.getResourceId(R.styleable.XTitleBar_centerSearchBg, 0);
             centerSearchRightType = array.getInt(R.styleable.XTitleBar_centerSearchRightType, TYPE_CENTER_SEARCH_RIGHT_VOICE);
         } else if (centerType == TYPE_CENTER_CUSTOM_VIEW) {
             centerCustomViewRes = array.getResourceId(R.styleable.XTitleBar_centerCustomView, 0);
@@ -194,12 +223,28 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         ViewGroup.LayoutParams globalParams = new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         setLayoutParams(globalParams);
 
+        boolean transparentStatusBar = Utils.supportTransparentStatusBar();
+
+        // 构建标题栏填充视图
+        if (fillStatusBar && transparentStatusBar) {
+            int statusBarHeight = Utils.getStatusBarHeight();
+            viewStatusBarFill = ViewCore.newView(context);
+            viewStatusBarFill.setBackgroundColor(statusBarColor);
+            LayoutParams statusBarParams = new LayoutParams(MATCH_PARENT, statusBarHeight);
+            statusBarParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            addView(viewStatusBarFill, statusBarParams);
+        }
+
         // 构建主视图
-        rlMain = new RelativeLayout(context);
-        rlMain.setId(Utils.generateViewId());
+        rlMain = ViewCore.newRelativeLayout(context);
         rlMain.setBackgroundColor(titleBarColor);
         LayoutParams mainParams = new LayoutParams(MATCH_PARENT, titleBarHeight);
-        mainParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        if (fillStatusBar && transparentStatusBar) {
+            mainParams.addRule(RelativeLayout.BELOW, viewStatusBarFill.getId());
+        } else {
+            mainParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        }
+
         // 计算主布局高度
         if (showBottomLine) {
             mainParams.height = titleBarHeight - Math.max(1, Utils.dp2px(0.4f));
@@ -256,13 +301,11 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
 
         if (leftType == TYPE_LEFT_TEXTVIEW) {
             // 初始化左边TextView
-            tvLeft = new TextView(context);
-            tvLeft.setId(Utils.generateViewId());
+            tvLeft = ViewCore.newTextView(context);
             tvLeft.setText(leftText);
             tvLeft.setTextColor(leftTextColor);
             tvLeft.setTextSize(TypedValue.COMPLEX_UNIT_PX, leftTextSize);
             tvLeft.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-            tvLeft.setSingleLine(true);
             tvLeft.setOnClickListener(this);
             // 设置DrawableLeft及DrawablePadding
             if (leftDrawable != 0) {
@@ -275,16 +318,18 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             }
             tvLeft.setPadding(PADDING_12, 0, PADDING_12, 0);
 
+            ViewCore.setBackground(tvLeft, leftBackgroundDrawable);
+
             rlMain.addView(tvLeft, leftInnerParams);
 
         } else if (leftType == TYPE_LEFT_IMAGEBUTTON) {
             // 初始化左边ImageButton
-            btnLeft = new ImageButton(context);
-            btnLeft.setId(Utils.generateViewId());
-            btnLeft.setBackgroundColor(Color.TRANSPARENT);
+            btnLeft = ViewCore.newImageButton(context);
             btnLeft.setImageResource(leftImageResource);
             btnLeft.setPadding(PADDING_12, 0, PADDING_12, 0);
             btnLeft.setOnClickListener(this);
+
+            ViewCore.setBackground(btnLeft, leftBackgroundDrawable);
 
             rlMain.addView(btnLeft, leftInnerParams);
 
@@ -292,7 +337,8 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             // 初始化自定义View
             viewCustomLeft = LayoutInflater.from(context).inflate(leftCustomViewRes, rlMain, false);
             if (viewCustomLeft.getId() == View.NO_ID) {
-                viewCustomLeft.setId(Utils.generateViewId());
+                //viewCustomLeft.setId(Utils.generateViewId());
+                viewCustomLeft.setId(ViewCore.generateViewId());
             }
             rlMain.addView(viewCustomLeft, leftInnerParams);
         }
@@ -310,33 +356,36 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
 
         if (rightType == TYPE_RIGHT_TEXTVIEW) {
             // 初始化右边TextView
-            tvRight = new TextView(context);
-            tvRight.setId(Utils.generateViewId());
+            tvRight = ViewCore.newTextView(context);
             tvRight.setText(rightText);
             tvRight.setTextColor(rightTextColor);
             tvRight.setTextSize(TypedValue.COMPLEX_UNIT_PX, rightTextSize);
             tvRight.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-            tvRight.setSingleLine(true);
             tvRight.setPadding(PADDING_12, 0, PADDING_12, 0);
             tvRight.setOnClickListener(this);
+
+            ViewCore.setBackground(tvRight, rightBackgroundDrawable);
+
             rlMain.addView(tvRight, rightInnerParams);
 
         } else if (rightType == TYPE_RIGHT_IMAGEBUTTON) {
             // 初始化右边ImageBtn
-            btnRight = new ImageButton(context);
-            btnRight.setId(Utils.generateViewId());
+            btnRight = ViewCore.newImageButton(context);
             btnRight.setImageResource(rightImageResource);
-            btnRight.setBackgroundColor(Color.TRANSPARENT);
             btnRight.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             btnRight.setPadding(PADDING_12, 0, PADDING_12, 0);
             btnRight.setOnClickListener(this);
+
+            ViewCore.setBackground(btnRight, rightBackgroundDrawable);
+
             rlMain.addView(btnRight, rightInnerParams);
 
         } else if (rightType == TYPE_RIGHT_CUSTOM_VIEW) {
             // 初始化自定义view
             viewCustomRight = LayoutInflater.from(context).inflate(rightCustomViewRes, rlMain, false);
             if (viewCustomRight.getId() == View.NO_ID) {
-                viewCustomRight.setId(Utils.generateViewId());
+//                viewCustomRight.setId(Utils.generateViewId());
+                viewCustomRight.setId(ViewCore.generateViewId());
             }
             rlMain.addView(viewCustomRight, rightInnerParams);
         }
@@ -350,10 +399,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
     private void initMainCenterViews(Context context) {
         if (centerType == TYPE_CENTER_TEXTVIEW) {
             // 初始化中间子布局
-            llMainCenter = new LinearLayout(context);
-            llMainCenter.setId(Utils.generateViewId());
-            llMainCenter.setGravity(Gravity.CENTER);
-            llMainCenter.setOrientation(LinearLayout.VERTICAL);
+            llMainCenter = ViewCore.newMainCenterViews(context);
             llMainCenter.setOnClickListener(this);
 
             LayoutParams centerParams = new LayoutParams(WRAP_CONTENT, MATCH_PARENT);
@@ -365,12 +411,11 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             rlMain.addView(llMainCenter, centerParams);
 
             // 初始化标题栏TextView
-            tvCenter = new TextView(context);
+            tvCenter = ViewCore.newTextView(context);
             tvCenter.setText(centerText);
             tvCenter.setTextColor(centerTextColor);
             tvCenter.setTextSize(TypedValue.COMPLEX_UNIT_PX, centerTextSize);
             tvCenter.setGravity(Gravity.CENTER);
-            tvCenter.setSingleLine(true);
             // 设置跑马灯效果
             tvCenter.setMaxWidth((int) (Utils.getScreenSize(context)[0] * 3 / 5.0));
             if (centerTextMarquee){
@@ -394,21 +439,20 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             rlMain.addView(progressCenter, progressParams);
 
             // 初始化副标题栏
-            tvCenterSub = new TextView(context);
+            tvCenterSub = ViewCore.newTextView(context);
             tvCenterSub.setText(centerSubText);
             tvCenterSub.setTextColor(centerSubTextColor);
             tvCenterSub.setTextSize(TypedValue.COMPLEX_UNIT_PX, centerSubTextSize);
             tvCenterSub.setGravity(Gravity.CENTER);
-            tvCenterSub.setSingleLine(true);
             if (TextUtils.isEmpty(centerSubText)) {
                 tvCenterSub.setVisibility(View.GONE);
             }
 
             LinearLayout.LayoutParams centerSubTextParams = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             llMainCenter.addView(tvCenterSub, centerSubTextParams);
-        } else if (centerType == TYPE_CENTER_SEARCHVIEW) {
+        } /*else if (centerType == TYPE_CENTER_SEARCHVIEW) {
             // 初始化通用搜索框
-            rlMainCenterSearch = new RelativeLayout(context);
+            rlMainCenterSearch = ViewCore.newRelativeLayout(context);
             rlMainCenterSearch.setBackgroundResource(centerSearchBgResource);
             LayoutParams centerParams = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
             // 设置边距
@@ -443,8 +487,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             rlMain.addView(rlMainCenterSearch, centerParams);
 
             // 初始化搜索框搜索ImageView
-            ivSearch = new ImageView(context);
-            ivSearch.setId(Utils.generateViewId());
+            ivSearch = ViewCore.newImageView(context);
             ivSearch.setOnClickListener(this);
             int searchIconWidth = Utils.dp2px(15);
             LayoutParams searchParams = new LayoutParams(searchIconWidth, searchIconWidth);
@@ -455,8 +498,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             ivSearch.setImageResource(R.drawable.xtitlebar_search_normal);
 
             // 初始化搜索框语音ImageView
-            ivVoice = new ImageView(context);
-            ivVoice.setId(Utils.generateViewId());
+            ivVoice = ViewCore.newImageView(context);
             ivVoice.setOnClickListener(this);
             LayoutParams voiceParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             voiceParams.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -507,11 +549,11 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
             searchHintParams.setMarginEnd(PADDING_5);
             rlMainCenterSearch.addView(etSearchHint, searchHintParams);
 
-        } else if (centerType == TYPE_CENTER_CUSTOM_VIEW) {
+        }*/ else if (centerType == TYPE_CENTER_CUSTOM_VIEW) {
             // 初始化中间自定义布局
             centerCustomView = LayoutInflater.from(context).inflate(centerCustomViewRes, rlMain, false);
             if (centerCustomView.getId() == View.NO_ID) {
-                centerCustomView.setId(Utils.generateViewId());
+                centerCustomView.setId(ViewCore.generateViewId());
             }
             LayoutParams centerCustomParams = new LayoutParams(WRAP_CONTENT, MATCH_PARENT);
             centerCustomParams.setMarginStart(PADDING_12);
@@ -538,7 +580,21 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        //setUpImmersionTitleBar();
     }
+
+//    private void setUpImmersionTitleBar() {
+//        Window window = getWindow();
+//        if (window == null) return;
+//        // 设置状态栏背景透明
+//        Utils.transparentStatusBar(window);
+//        // 设置图标主题
+//        if (statusBarMode == 0) {
+//            Utils.setDarkMode(window);
+//        } else {
+//            Utils.setLightMode(window);
+//        }
+//    }
 
     private Window getWindow() {
         Context context = getContext();
@@ -554,56 +610,56 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
         return null;
     }
 
-    private TextWatcher centerSearchWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (centerSearchRightType == TYPE_CENTER_SEARCH_RIGHT_VOICE) {
-                if (TextUtils.isEmpty(s)) {
-                    ivVoice.setImageResource(R.drawable.xtitlebar_voice);
-                } else {
-                    ivVoice.setImageResource(R.drawable.xtitlebar_delete_normal);
-                }
-            } else {
-                if (TextUtils.isEmpty(s)) {
-                    ivVoice.setVisibility(View.GONE);
-                } else {
-                    ivVoice.setVisibility(View.VISIBLE);
-                }
-            }
-        }
-    };
-
-    private OnFocusChangeListener focusChangeListener = new OnFocusChangeListener() {
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (centerSearchRightType == TYPE_CENTER_SEARCH_RIGHT_DELETE) {
-                String input = etSearchHint.getText().toString();
-                if (hasFocus && !TextUtils.isEmpty(input)) {
-                    ivVoice.setVisibility(View.VISIBLE);
-                } else {
-                    ivVoice.setVisibility(View.GONE);
-                }
-            }
-        }
-    };
-
-    private TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            if (listener != null && actionId == EditorInfo.IME_ACTION_SEARCH) {
-                listener.onClicked(v, ACTION_SEARCH_SUBMIT, etSearchHint.getText().toString());
-            }
-            return false;
-        }
-    };
+//    private TextWatcher centerSearchWatcher = new TextWatcher() {
+//        @Override
+//        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//        }
+//
+//        @Override
+//        public void onTextChanged(CharSequence s, int start, int before, int count) {
+//        }
+//
+//        @Override
+//        public void afterTextChanged(Editable s) {
+//            if (centerSearchRightType == TYPE_CENTER_SEARCH_RIGHT_VOICE) {
+//                if (TextUtils.isEmpty(s)) {
+//                    ivVoice.setImageResource(R.drawable.xtitlebar_voice);
+//                } else {
+//                    ivVoice.setImageResource(R.drawable.xtitlebar_delete_normal);
+//                }
+//            } else {
+//                if (TextUtils.isEmpty(s)) {
+//                    ivVoice.setVisibility(View.GONE);
+//                } else {
+//                    ivVoice.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        }
+//    };
+//
+//    private OnFocusChangeListener focusChangeListener = new OnFocusChangeListener() {
+//        @Override
+//        public void onFocusChange(View v, boolean hasFocus) {
+//            if (centerSearchRightType == TYPE_CENTER_SEARCH_RIGHT_DELETE) {
+//                String input = etSearchHint.getText().toString();
+//                if (hasFocus && !TextUtils.isEmpty(input)) {
+//                    ivVoice.setVisibility(View.VISIBLE);
+//                } else {
+//                    ivVoice.setVisibility(View.GONE);
+//                }
+//            }
+//        }
+//    };
+//
+//    private TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
+//        @Override
+//        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//            if (listener != null && actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                listener.onClicked(v, ACTION_SEARCH_SUBMIT, etSearchHint.getText().toString());
+//            }
+//            return false;
+//        }
+//    };
 
     private long lastClickMillis = 0;     // 双击事件中，上次被点击时间
 
@@ -786,7 +842,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
      */
     public void setLeftView(View leftView) {
         if (leftView.getId() == View.NO_ID) {
-            leftView.setId(Utils.generateViewId());
+            leftView.setId(ViewCore.generateViewId());
         }
         LayoutParams leftInnerParams = new LayoutParams(WRAP_CONTENT, MATCH_PARENT);
         leftInnerParams.addRule(RelativeLayout.ALIGN_PARENT_START);
@@ -799,7 +855,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
      */
     public void setCenterView(View centerView) {
         if (centerView.getId() == View.NO_ID) {
-            centerView.setId(Utils.generateViewId());
+            centerView.setId(ViewCore.generateViewId());
         }
         LayoutParams centerInnerParams = new LayoutParams(WRAP_CONTENT, MATCH_PARENT);
         centerInnerParams.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -812,7 +868,7 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
      */
     public void setRightView(View rightView) {
         if (rightView.getId() == View.NO_ID) {
-            rightView.setId(Utils.generateViewId());
+            rightView.setId(ViewCore.generateViewId());
         }
         LayoutParams rightInnerParams = new LayoutParams(WRAP_CONTENT, MATCH_PARENT);
         rightInnerParams.addRule(RelativeLayout.ALIGN_PARENT_END);
@@ -888,8 +944,6 @@ public class TitleBar extends RelativeLayout implements View.OnClickListener {
     /**
      * 设置双击监听
      */
-
-
     public static final int ACTION_LEFT_TEXT = 1;        // 左边TextView被点击
     public static final int ACTION_LEFT_BUTTON = 2;      // 左边ImageBtn被点击
     public static final int ACTION_RIGHT_TEXT = 3;       // 右边TextView被点击

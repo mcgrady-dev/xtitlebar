@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!--    <style name="DefaultTitleBarRes">-->
-<!--        &lt;!&ndash;Title&ndash;&gt;-->
-<!--        <item name="titleBarHeight">?attr/actionBarSize</item>-->
-<!--        <item name="titleBarColor">@android:color/white</item>-->
-<!--        <item name="titleSize">14sp</item>-->
-<!--        <item name="titleColor">@android:color/black</item>-->
-<!--        <item name="titleViewLeftMargin">16dp</item>-->
-<!--        <item name="titleViewRightMargin">16dp</item>-->
-<!--        &lt;!&ndash;LeftView&ndash;&gt;-->
-<!--        <item name="leftTextColor">@android:color/black</item>-->
-<!--        <item name="leftTextSize">14sp</item>-->
-<!--        &lt;!&ndash;RightView&ndash;&gt;-->
-<!--        <item name="rightTextColor">@android:color/black</item>-->
-<!--        <item name="rightTextSize">14sp</item>-->
-
-<!--    </style>-->
+    <style name="TitleBarDefaultStyle">
+        <item name="titleBarHeight">?android:attr/actionBarSize</item>
+        <item name="titleBarColor">@color/titlebar_background</item>
+        <item name="showBottomLine">true</item>
+        <item name="bottomLineColor">@color/titlebar_bottom_line</item>
+        <item name="leftTextColor">@color/xtitlebar_text_selector</item>
+        <item name="leftTextSize">14sp</item>
+        <item name="leftDrawable">@drawable/ic_arrow_back_24_gray</item>
+        <item name="leftImageResource">@drawable/ic_arrow_back_24_gray</item>
+        <item name="leftBackgroundDrawable">?android:attr/selectableItemBackground</item>
+        <item name="rightTextColor">@color/xtitlebar_text_selector</item>
+        <item name="rightTextSize">14sp</item>
+        <item name="rightBackgroundDrawable">?android:attr/selectableItemBackground</item>
+        <item name="centerTextColor">@color/titlebar_center_text</item>
+        <item name="centerSubTextColor">@color/titlebar_center_subtext</item>
+        <item name="centerTextSize">16sp</item>
+        <item name="centerSubTextSize">10sp</item>
+    </style>
 
 </resources>

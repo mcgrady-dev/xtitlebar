@@ -1,4 +1,4 @@
-package com.mcgrady.xtitlebar;
+package com.mcgrady.xtitlebar.util;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,8 +18,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
-import java.util.UUID;
 
 /**
  * Created by mcgrady on 2020/9/14.
@@ -68,19 +66,6 @@ public final class Utils {
     public static int px2sp(final float pxValue) {
         final float fontScale = Resources.getSystem().getDisplayMetrics().scaledDensity;
         return (int) (pxValue / fontScale + 0.5f);
-    }
-
-    /**
-     * 计算View Id
-     *
-     * @return
-     */
-    public static int generateViewId() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            return View.generateViewId();
-        } else {
-            return UUID.randomUUID().hashCode();
-        }
     }
 
     /**
@@ -285,5 +270,12 @@ public final class Utils {
             );
         }
         return 0;
+    }
+
+    public static boolean supportTransparentStatusBar() {
+        return OSUtils.isMiui()
+                || OSUtils.isFlyme()
+                || (OSUtils.isOppo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                || Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 }

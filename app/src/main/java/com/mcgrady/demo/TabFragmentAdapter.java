@@ -1,9 +1,9 @@
 package com.mcgrady.demo;
 
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 public class TabFragmentAdapter extends FragmentPagerAdapter {
     private String[] tabs = {"商品", "详情", "评价"};

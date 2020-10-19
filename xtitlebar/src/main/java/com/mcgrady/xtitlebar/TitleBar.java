@@ -1,26 +1,22 @@
 package com.mcgrady.xtitlebar;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.text.Editable;
+import androidx.annotation.NonNull;
+
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,9 +25,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mcgrady.xtitlebar.style.BaseTitleBarStyle;
-import com.mcgrady.xtitlebar.style.ITitleBarStyle;
-import com.mcgrady.xtitlebar.style.TitleBarDefaultStyle;
 import com.mcgrady.xtitlebar.util.Utils;
 
 
